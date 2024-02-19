@@ -1,12 +1,10 @@
 package ru.mcs.dynamic.businessobject.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
-import org.springframework.context.annotation.Lazy;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -20,18 +18,14 @@ public class FieldEntity extends BasicEntity {
     @Column(name = "dataType")
     private String dataType;
 
-    @Column(name = "indexed")
-    private boolean indexed;
-
     @Column(name = "fieldNum")
     private int fieldNum;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "object_id",  referencedColumnName = "id")
-    @BatchSize(size = 10)
+    @Column(name = "isIndexed")
+    private boolean isIndexed;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "object_id", referencedColumnName = "id", nullable = false)
     private ObjectEntity objectEntity;
 
-    @OneToMany(mappedBy = "fieldEntity", cascade = CascadeType.ALL)
-    @Lazy
-    private List<ValueEntity> valueEntities;
 }

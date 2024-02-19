@@ -3,8 +3,8 @@ package ru.mcs.dynamic.businessobject.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.mcs.dynamic.businessobject.dto.ObjectEntityRequest;
-import ru.mcs.dynamic.businessobject.dto.ObjectEntityResponse;
+import ru.mcs.dynamic.businessobject.dto.request.ObjectEntityRequest;
+import ru.mcs.dynamic.businessobject.dto.response.ObjectEntityResponse;
 import ru.mcs.dynamic.businessobject.service.ObjectEntityService;
 
 import java.util.List;

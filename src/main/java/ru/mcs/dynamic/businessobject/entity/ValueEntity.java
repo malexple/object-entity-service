@@ -12,7 +12,4 @@ public class ValueEntity extends BasicEntity {
     @Column(name = "value")
     private String value;
 
-    @ManyToOne
-    @JoinColumn(name="field_id", referencedColumnName = "id")
-    private FieldEntity fieldEntity;
 }

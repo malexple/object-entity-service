@@ -1,4 +1,4 @@
-package ru.mcs.dynamic.businessobject.dto;
+package ru.mcs.dynamic.businessobject.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FieldEntityRequest {
+public class FieldEntityResponse {
     private String fieldName;
     private String dataType;
 }

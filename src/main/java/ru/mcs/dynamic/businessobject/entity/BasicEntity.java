@@ -1,61 +1,60 @@
 package ru.mcs.dynamic.businessobject.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
 import java.util.Objects;
-
-import static jakarta.persistence.InheritanceType.TABLE_PER_CLASS;
+import java.util.UUID;
 
 @Getter
 @Setter
-@Entity
-@Inheritance(strategy = TABLE_PER_CLASS)
+@MappedSuperclass
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 public abstract class BasicEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected long id;
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", updatable = false)
+    protected UUID id;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     protected Instant createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     protected Instant updatedAt;
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "BasicEntity{" +
-                "id=" + id +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BasicEntity)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+
         BasicEntity that = (BasicEntity) o;
-        return getId() == that.getId();
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(createdAt, that.createdAt)) return false;
+        return Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+        return result;
     }
-
 }
