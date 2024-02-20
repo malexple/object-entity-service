@@ -1,9 +1,7 @@
 package ru.mcs.dynamic.businessobject.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -12,8 +10,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @DynamicUpdate
 @Table(name = "object_table")

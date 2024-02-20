@@ -1,10 +1,10 @@
 package ru.mcs.dynamic.businessobject.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -28,4 +28,17 @@ public class FieldEntity extends BasicEntity {
     @JoinColumn(name = "object_id", referencedColumnName = "id", nullable = false)
     private ObjectEntity objectEntity;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        FieldEntity that = (FieldEntity) o;
+        return fieldNum == that.fieldNum && isIndexed == that.isIndexed && Objects.equals(fieldName, that.fieldName) && Objects.equals(dataType, that.dataType) && Objects.equals(objectEntity, that.objectEntity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), fieldName, dataType, fieldNum, isIndexed, objectEntity);
+    }
 }
