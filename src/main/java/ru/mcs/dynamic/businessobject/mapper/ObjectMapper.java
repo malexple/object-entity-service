@@ -1,7 +1,6 @@
 package ru.mcs.dynamic.businessobject.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import ru.mcs.dynamic.businessobject.dto.request.ObjectEntityRequest;
 import ru.mcs.dynamic.businessobject.entity.ObjectEntity;
 
