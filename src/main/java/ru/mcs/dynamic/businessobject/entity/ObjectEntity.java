@@ -31,4 +31,7 @@ public class ObjectEntity extends BasicEntity {
         field.setObjectEntity(this);
         this.fields.add(field);
     }
+
+    @OneToMany(mappedBy = "objectEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<ValueEntity> values = new HashSet<>();
 }

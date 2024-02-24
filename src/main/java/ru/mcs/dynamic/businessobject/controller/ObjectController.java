@@ -18,13 +18,13 @@ public class ObjectController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ObjectEntityResponse createProduct(@RequestBody ObjectEntityRequest objectEntityRequest) {
+    public ObjectEntityResponse createObject(@RequestBody ObjectEntityRequest objectEntityRequest) {
         return objectEntityService.createObjectEntity(objectEntityRequest);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ObjectEntityResponse> getAllProducts() {
+    public List<ObjectEntityResponse> getAllObjects() {
         return objectEntityService.getAllObjectEntity();
     }
 
