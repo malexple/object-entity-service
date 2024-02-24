@@ -18,8 +18,8 @@ public class ObjectController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody ObjectEntityRequest objectEntityRequest) {
-        objectEntityService.createObjectEntity(objectEntityRequest);
+    public ObjectEntityResponse createProduct(@RequestBody ObjectEntityRequest objectEntityRequest) {
+        return objectEntityService.createObjectEntity(objectEntityRequest);
     }
 
     @GetMapping

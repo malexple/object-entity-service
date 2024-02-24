@@ -22,13 +22,13 @@ public class ObjectEntityService {
     private final ObjectEntityRepository objectEntityRepository;
     private final ObjectMapper mapper;
 
-    public void createObjectEntity(ObjectEntityRequest objectEntityRequest) {
+    public ObjectEntityResponse createObjectEntity(ObjectEntityRequest objectEntityRequest) {
         ObjectEntity objectEntity = mapper.objectDTOToObject(objectEntityRequest);
         setFieldNum(objectEntity.getFields());
 
         objectEntityRepository.saveAndFlush(objectEntity);
         log.info("ObjectEntity {} is saved", objectEntity.getId());
-
+        return mapper.objectToObjectDTO(objectEntity);
     }
 
     private void setFieldNum(Set<FieldEntity> fields) {
