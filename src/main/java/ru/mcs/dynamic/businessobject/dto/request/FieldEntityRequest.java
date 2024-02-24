@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class FieldEntityRequest {
     private String fieldName;
     private String dataType;
-    private int fieldNum;
 }

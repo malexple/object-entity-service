@@ -12,6 +12,7 @@ import ru.mcs.dynamic.businessobject.mapper.ObjectMapper;
 import ru.mcs.dynamic.businessobject.repository.ObjectEntityRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +24,18 @@ public class ObjectEntityService {
 
     public void createObjectEntity(ObjectEntityRequest objectEntityRequest) {
         ObjectEntity objectEntity = mapper.objectDTOToObject(objectEntityRequest);
+        setFieldNum(objectEntity.getFields());
 
         objectEntityRepository.saveAndFlush(objectEntity);
         log.info("ObjectEntity {} is saved", objectEntity.getId());
 
+    }
+
+    private void setFieldNum(Set<FieldEntity> fields) {
+        int index = 1;
+        for (FieldEntity field : fields) {
+            field.setFieldNum(index++);
+        }
     }
 
     public List<ObjectEntityResponse> getAllObjectEntity() {
