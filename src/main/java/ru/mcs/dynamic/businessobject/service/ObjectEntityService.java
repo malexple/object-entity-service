@@ -1,6 +1,7 @@
 package ru.mcs.dynamic.businessobject.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.mcs.dynamic.businessobject.dto.request.ObjectEntityRequest;
@@ -38,7 +39,7 @@ public class ObjectEntityService {
     }
 
     private void setFieldNum(Set<FieldEntity> fields) {
-        int index = 1;
+        int index = 0;
         for (FieldEntity field : fields) {
             field.setFieldNum(index++);
         }
@@ -73,18 +74,23 @@ public class ObjectEntityService {
         }
         ObjectEntity objectEntity = objectEntityRepository.findByName(parameters.get("Object"));
         if (objectEntity != null) {
-            Map<Integer, String> fielMap = fieldEntityRepository.getFieldMap(objectEntity);
-            ValueEntity valueEntity = createValueEntity(objectEntity, fielMap);
+            ValueEntity valueEntity = createValueEntity(objectEntity, objectEntity.getFields());
             valueEntityRepository.saveAndFlush(valueEntity);
             log.info("ValueEntity {} is saved", objectEntity.getId());
         }
     }
 
-    private ValueEntity createValueEntity(ObjectEntity objectEntity, Map<Integer, String> fielMap) {
-        return ValueEntity.builder().
-                objectEntity(objectEntity)
-                .name(objectEntity.getName())
-                .column_1(fielMap.get(2))
-                .build();
+    @SneakyThrows
+    private ValueEntity createValueEntity(ObjectEntity objectEntity, Set<FieldEntity> fields) {
+        ValueEntity valueEntity = ValueEntity.builder().objectEntity(objectEntity).build();
+
+        for (FieldEntity field : fields) {
+            if (field.getFieldNum() == 0) {
+                valueEntity.setName(field.getFieldName());
+            } else {
+                valueEntity.setFieldValue(field.getFieldNum(), field.getFieldName());
+            }
+        }
+        return valueEntity;
     }
 }
