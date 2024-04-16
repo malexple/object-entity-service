@@ -10,6 +10,7 @@ import ru.mcs.dynamic.businessobject.dto.response.ObjectEntityResponse;
 import ru.mcs.dynamic.businessobject.entity.FieldEntity;
 import ru.mcs.dynamic.businessobject.entity.ObjectEntity;
 import ru.mcs.dynamic.businessobject.entity.ValueEntity;
+import ru.mcs.dynamic.businessobject.error.ServiceException;
 import ru.mcs.dynamic.businessobject.mapper.ObjectMapper;
 import ru.mcs.dynamic.businessobject.repository.FieldEntityRepository;
 import ru.mcs.dynamic.businessobject.repository.ObjectEntityRepository;
@@ -18,6 +19,9 @@ import ru.mcs.dynamic.businessobject.repository.ValueEntityRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static ru.mcs.dynamic.businessobject.error.ObjectError.CREATE_OBJECT_ERROR;
+import static ru.mcs.dynamic.businessobject.error.DataErrors.CREATE_DATA_ERROR;
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +37,12 @@ public class ObjectEntityService {
         ObjectEntity objectEntity = mapper.objectDTOToObject(objectEntityRequest);
         setFieldNum(objectEntity.getFields());
 
-        objectEntityRepository.saveAndFlush(objectEntity);
-        log.info("ObjectEntity {} is saved", objectEntity.getId());
+        try {
+            objectEntityRepository.saveAndFlush(objectEntity);
+            log.info("ObjectEntity {} is saved", objectEntity.getId());
+        } catch (Exception e) {
+            throw new ServiceException(CREATE_OBJECT_ERROR);
+        }
         return mapper.objectToObjectDTO(objectEntity);
     }
 
@@ -68,7 +76,7 @@ public class ObjectEntityService {
                 .dataType(fieldEntity.getDataType()).build();
     }
 
-    public void createDataEntity(Map<String,String> parameters) {
+    public void createDataEntity(Map<String, String> parameters) {
         for (String key : parameters.keySet()) {
             System.out.printf("%s : %s%n", key, parameters.get(key));
         }
@@ -77,6 +85,8 @@ public class ObjectEntityService {
             ValueEntity valueEntity = createValueEntity(objectEntity, objectEntity.getFields());
             valueEntityRepository.saveAndFlush(valueEntity);
             log.info("ValueEntity {} is saved", objectEntity.getId());
+        } else {
+            throw new ServiceException(CREATE_DATA_ERROR);
         }
     }
 
