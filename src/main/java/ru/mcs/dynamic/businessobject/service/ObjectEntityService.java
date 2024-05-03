@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.mcs.dynamic.businessobject.dto.request.DataEntityRequest;
 import ru.mcs.dynamic.businessobject.dto.request.ObjectEntityRequest;
 import ru.mcs.dynamic.businessobject.dto.response.FieldEntityResponse;
 import ru.mcs.dynamic.businessobject.dto.response.ObjectEntityResponse;
@@ -20,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static ru.mcs.dynamic.businessobject.error.ObjectError.CREATE_OBJECT_ERROR;
 import static ru.mcs.dynamic.businessobject.error.DataErrors.CREATE_DATA_ERROR;
+import static ru.mcs.dynamic.businessobject.error.ObjectError.CREATE_OBJECT_ERROR;
 
 @Service
 @RequiredArgsConstructor
@@ -76,13 +77,10 @@ public class ObjectEntityService {
                 .dataType(fieldEntity.getDataType()).build();
     }
 
-    public void createDataEntity(Map<String, String> parameters) {
-        for (String key : parameters.keySet()) {
-            System.out.printf("%s : %s%n", key, parameters.get(key));
-        }
-        ObjectEntity objectEntity = objectEntityRepository.findByName(parameters.get("Object"));
+    public void createDataEntity(DataEntityRequest dataEntityRequest) {
+        ObjectEntity objectEntity = objectEntityRepository.findByName(dataEntityRequest.getObjectName());
         if (objectEntity != null) {
-            ValueEntity valueEntity = createValueEntity(objectEntity, objectEntity.getFields());
+            ValueEntity valueEntity = createValueEntity(objectEntity, dataEntityRequest.getValues());
             valueEntityRepository.saveAndFlush(valueEntity);
             log.info("ValueEntity {} is saved", objectEntity.getId());
         } else {
@@ -91,16 +89,23 @@ public class ObjectEntityService {
     }
 
     @SneakyThrows
-    private ValueEntity createValueEntity(ObjectEntity objectEntity, Set<FieldEntity> fields) {
+    private ValueEntity createValueEntity(ObjectEntity objectEntity, Map<String, String> fields) {
         ValueEntity valueEntity = ValueEntity.builder().objectEntity(objectEntity).build();
 
-        for (FieldEntity field : fields) {
-            if (field.getFieldNum() == 0) {
-                valueEntity.setName(field.getFieldName());
+        for (String key : fields.keySet()) {
+            if (key.equals("Name")) {
+                valueEntity.setName(fields.get(key));
             } else {
-                valueEntity.setFieldValue(field.getFieldNum(), field.getFieldName());
+                int fieldNum = getFieldNum(key, objectEntity.getFields());
+                valueEntity.setFieldValue(fieldNum, fields.get(key));
             }
         }
+
         return valueEntity;
+    }
+
+    private int getFieldNum(String fieldName, Set<FieldEntity> fields) {
+        FieldEntity fieldEntity = fields.stream().filter(field -> field.getFieldName().equals(fieldName)).findFirst().get();
+        return fieldEntity.getFieldNum();
     }
 }

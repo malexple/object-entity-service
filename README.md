@@ -1,5 +1,13 @@
 # object-entity-service
 
+## Создание метаданные объекта
+![create-object.png](assets/create-object.png)
+
+## Создание данных 
+![create-data.png](assets/create-data.png)
+
+![create-data-db.png](assets/create-data-db.png)
+
 ```mermaid
 classDiagram
   direction RL
@@ -44,7 +52,7 @@ classDiagram
   class UniqueFields {
   	GUID
   }
-  class Relationshis {
+  class RelationShips {
   	SandboxID
   	ObjID
   	GUID
@@ -65,5 +73,14 @@ classDiagram
   Clobs "1" --o "*" Data : 
   Data "1" --o "*" Indexes : 
   Data "1" --o "*" UniqueFields
-  Data "1" --o "*" Relationshis
+  Data "1" --o "*" RelationShips
 ```
+
+RelationShips:
+
+ - master-detail 
+
+- lookups 
+
+Создаем в таблице fields поле с типом relationships 
+
